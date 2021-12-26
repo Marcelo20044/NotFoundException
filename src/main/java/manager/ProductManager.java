@@ -1,4 +1,9 @@
-package domain;
+package manager;
+
+import domain.Book;
+import domain.Product;
+import repository.ProductRepository;
+import domain.Smartphone;
 
 public class ProductManager {
     ProductRepository repository = new ProductRepository();
@@ -30,7 +35,7 @@ public class ProductManager {
     public boolean matches(Product product, String search) {
         if (product instanceof Book) {
             Book book = (Book) product;
-            if (book.getTitle().contains(search)) {
+            if (book.getName().contains(search)) {
                 return true;
             }
             if (book.getAuthor().contains(search)) {
