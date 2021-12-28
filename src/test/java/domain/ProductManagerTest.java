@@ -2,11 +2,12 @@ package domain;
 
 import manager.ProductManager;
 import org.junit.jupiter.api.Test;
+import repository.ProductRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductManagerTest {
-    ProductManager manager = new ProductManager();
+    ProductRepository repo = new ProductRepository();
 
     Smartphone iPhone = new Smartphone(1, "iPhone", 80000, "Apple");
     Book harryPotter = new Book(2, "HarryPotter", 5000, "J.K. Rowling");
@@ -14,60 +15,27 @@ class ProductManagerTest {
 
 
     @Test
-    void shouldSearchBySmartphoneName() {
+    void shouldRemoveById() {
+        repo.save(iPhone);
+        repo.save(iPad);
+        repo.save(harryPotter);
 
-        manager.add(iPhone);
-        Product[] expected = new Product[]{iPhone};
-        Product[] actual = manager.searchBy("iPhone");
+        repo.removeById(4);
+        Product[] expected = new Product[]{iPhone, harryPotter};
+        Product[] actual = repo.findAll();
         assertArrayEquals(expected, actual);
     }
 
     @Test
-    void shouldSearchByBookName() {
+    void shouldThrowRightException(){
+        repo.save(iPhone);
+        repo.save(iPad);
+        repo.save(harryPotter);
 
-        manager.add(harryPotter);
-        Product[] expected = new Product[]{harryPotter};
-        Product[] actual = manager.searchBy("HarryPotter");
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    void shouldSearchByAuthor() {
-
-        manager.add(harryPotter);
-        Product[] expected = new Product[]{harryPotter};
-        Product[] actual = manager.searchBy("Rowling");
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    void shouldSearchByManufacturer() {
-
-        manager.add(iPhone);
-        Product[] expected = new Product[]{iPhone};
-        Product[] actual = manager.searchBy("Apple");
-        assertArrayEquals(expected, actual);
-    }
-
-
-    @Test
-    void shouldSearchSeveralProducts() {
-
-        manager.add(iPhone);
-        manager.add(iPad);
-        Product[] expected = new Product[]{iPhone, iPad};
-        Product[] actual = manager.searchBy("Apple");
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    void shouldSearchNothing() {
-
-        manager.add(iPhone);
-        manager.add(iPad);
-        Product[] expected = new Product[]{};
-        Product[] actual = manager.searchBy("Xiaomi");
-        assertArrayEquals(expected, actual);
+       assertThrows(NotFoundException.class, () -> {
+          repo.removeById(5);
+       });
     }
 
 }
+
